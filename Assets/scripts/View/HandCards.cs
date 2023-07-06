@@ -52,6 +52,10 @@ public class HandCards : MonoBehaviour {
         swappingCard.row = cardPickSlot.row;
         swappingCard.column = cardPickSlot.column;
 
+        Invoke("UpdateCardRowsAfterDelay", 0.2f);
+    }
+
+    private void UpdateCardRowsAfterDelay() {
         // Update rows
         UpdateCardRows();
     }
@@ -68,10 +72,26 @@ public class HandCards : MonoBehaviour {
         //allHandCards.FirstOrDefault(i => (i.row == dropData.slotRow && i.column == dropData.slotColumn));
 
         cardsRow1 = allHandCards.Where(i => (i.row == 0)).ToList();
+        cardsRow1 = cardsRow1.OrderBy(o => o.column).ToList();
+        Debug.Log("UpdateCardRows : cardsRow1.Count = " + cardsRow1.Count);
 
         cardsRow2 = allHandCards.Where(i => (i.row == 1)).ToList();
+        cardsRow2 = cardsRow2.OrderBy(o => o.column).ToList();
+        Debug.Log("UpdateCardRows : cardsRow2.Count = " + cardsRow2.Count);
 
         cardsRow3 = allHandCards.Where(i => (i.row == 2)).ToList();
+        cardsRow3 = cardsRow3.OrderBy(o => o.column).ToList();
+        Debug.Log("UpdateCardRows : cardsRow3.Count = " + cardsRow3.Count);
+
+        bool isRow1ValidSet = CardsSetValidator.ValidateBigTwoSet(cardsRow1);
+        Debug.Log("UpdateCardRows : CardsSetValidator : ValidateBigTwoSet : isRow1ValidSet = " + isRow1ValidSet);
+
+        bool isRow2ValidSet = CardsSetValidator.ValidateBigTwoSet(cardsRow2);
+        Debug.Log("UpdateCardRows : CardsSetValidator : ValidateBigTwoSet : isRow2ValidSet = " + isRow2ValidSet);
+
+        bool isRow3ValidSet = CardsSetValidator.ValidateBigTwoSet(cardsRow3);
+        Debug.Log("UpdateCardRows : CardsSetValidator : ValidateBigTwoSet : isRow3ValidSet = " + isRow3ValidSet);
+
     }
 
     public void InitCards(List<CardData> deckData) {

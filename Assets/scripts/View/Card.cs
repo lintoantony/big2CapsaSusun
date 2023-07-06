@@ -6,6 +6,10 @@ public class Card : MonoBehaviour {
     public int row;
     public int column;
 
+    public CardSuit cardSuit;
+
+    public CardRank cardRank;
+
     [SerializeField]
     private Suit suit;
 
@@ -16,10 +20,13 @@ public class Card : MonoBehaviour {
     }
 
     public void SetSuite(CardSuit type) {
+        this.cardSuit = type;
         suit.SetType(type);
     }
 
     public void SetValue(CardRank val){
+
+        this.cardRank = val;
 
         string valStr = "";
 
