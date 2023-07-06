@@ -20,7 +20,7 @@ public class CardDropSlot : MonoBehaviour, IDropHandler {
 
 
         GameObject droppedObj = eventData.pointerDrag;
-        droppedObj.transform.position = transform.position;
+        droppedObj.transform.position = this.transform.position;
 
         Card card = droppedObj.GetComponent<Card>();
 
@@ -34,14 +34,13 @@ public class CardDropSlot : MonoBehaviour, IDropHandler {
         dropData.cardColumn = card.column;
         dropData.slotRow = this.row;
         dropData.slotColumn = this.column;
-        dropData.targetPosition = this.transform.position;
+
+        // Notify obserevers
+        OnCardDrop(dropData);
 
         // Update the incoming card to current slot row & colum values
         card.row = this.row;
         card.column = this.column;
-
-        // Notify obserevers
-        OnCardDrop(dropData);
     }
 }
 
@@ -50,5 +49,4 @@ public class DropData {
     public int slotColumn;
     public int cardRow;
     public int cardColumn;
-    public Vector3 targetPosition;
 }
