@@ -71,26 +71,33 @@ public class HandCards : MonoBehaviour {
 
         //allHandCards.FirstOrDefault(i => (i.row == dropData.slotRow && i.column == dropData.slotColumn));
 
+        // Grouping the cards in Bottom Row & keeping in order as in the view
         cardsRow1 = allHandCards.Where(i => (i.row == 0)).ToList();
         cardsRow1 = cardsRow1.OrderBy(o => o.column).ToList();
         Debug.Log("UpdateCardRows : cardsRow1.Count = " + cardsRow1.Count);
 
+        // Grouping the cards in Middle Row & keeping in order as in the view
         cardsRow2 = allHandCards.Where(i => (i.row == 1)).ToList();
         cardsRow2 = cardsRow2.OrderBy(o => o.column).ToList();
         Debug.Log("UpdateCardRows : cardsRow2.Count = " + cardsRow2.Count);
 
+        // Grouping the cards in Top Row & keeping in order as in the view
         cardsRow3 = allHandCards.Where(i => (i.row == 2)).ToList();
         cardsRow3 = cardsRow3.OrderBy(o => o.column).ToList();
         Debug.Log("UpdateCardRows : cardsRow3.Count = " + cardsRow3.Count);
 
-        bool isRow1ValidSet = CardsSetValidator.ValidateBigTwoSet(cardsRow1);
-        Debug.Log("UpdateCardRows : CardsSetValidator : ValidateBigTwoSet : isRow1ValidSet = " + isRow1ValidSet);
 
-        bool isRow2ValidSet = CardsSetValidator.ValidateBigTwoSet(cardsRow2);
-        Debug.Log("UpdateCardRows : CardsSetValidator : ValidateBigTwoSet : isRow2ValidSet = " + isRow2ValidSet);
+        // Bottom row result
+        ResultData resultData1 = CardsSetValidator.ValidateRow(cardsRow1);
+        Debug.Log("UpdateCardRows : CardsSetValidator : ValidateRow : BOTTOM Row = " + resultData1.setType);
 
-        bool isRow3ValidSet = CardsSetValidator.ValidateBigTwoSet(cardsRow3);
-        Debug.Log("UpdateCardRows : CardsSetValidator : ValidateBigTwoSet : isRow3ValidSet = " + isRow3ValidSet);
+        // Middle row result
+        ResultData resultData2 = CardsSetValidator.ValidateRow(cardsRow2);
+        Debug.Log("UpdateCardRows : CardsSetValidator : ValidateRow : MIDDLE Row = " + resultData2.setType);
+
+        // Top row result
+        ResultData resultData3 = CardsSetValidator.ValidateRow(cardsRow3);
+        Debug.Log("UpdateCardRows : CardsSetValidator : ValidateRow : TOP Row = " + resultData3.setType);
 
     }
 
