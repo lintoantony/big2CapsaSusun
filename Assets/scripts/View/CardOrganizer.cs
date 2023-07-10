@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CardOrganizer : MonoBehaviour {
+
+    public delegate void OnSubmitDelegate(List<CardData> organizedCards);
+    public static event OnSubmitDelegate OnSubmitResult;
 
     [SerializeField]
     private GameObject cardsHolder;
@@ -18,7 +22,11 @@ public class CardOrganizer : MonoBehaviour {
 
     private GameController gameController;
 
-    private List<CardData> deckData;
+    private List<CardData> handCardsData;
+
+    [SerializeField] private TMP_Text firstRowTxt;
+    [SerializeField] private TMP_Text secondRowTxt;
+    [SerializeField] private TMP_Text thridRowTxt;
 
 
     // Start is called before the first frame update
@@ -27,30 +35,52 @@ public class CardOrganizer : MonoBehaviour {
         Debug.Log("handCards 1 = " + handCards);
     }
 
-    public void InitDataAndRender(GameController gameControllerRef) {
+    private void OnEnable() {
+        HandCards.OnCardArrange += OnCardArrange;
+    }
+
+    private void OnDisable() {
+        HandCards.OnCardArrange -= OnCardArrange;
+    }
+
+    private void OnCardArrange(ResultData row1Result, ResultData row2Result, ResultData row3Result) {
+        Debug.Log("CardOrganizer : OnCardArrange");
+
+        firstRowTxt.text = row1Result.setType.ToString();
+        secondRowTxt.text = row2Result.setType.ToString();
+        thridRowTxt.text = row3Result.setType.ToString();
+    }
+
+    public void InitDataAndRender(GameController gameControllerRef, List<CardData> cardsData) {
         gameController = gameControllerRef;
 
-        deckData = gameController.deckData;
+        //deckData = gameController.deckData;
 
         //RenderCards();
 
         //handCards.InitCards(deckData);
 
-        Invoke("InitCardsAfterDelay", 1f);
+        handCardsData = cardsData;
+
+
+        Invoke("InitCardsAfterDelay", 0.1f);
+
+        //handCards.InitCards(handCardsData);
     }
 
+    
     private void InitCardsAfterDelay() {
-        Debug.Log("handCards 2 = " + handCards);
-        Debug.Log("deckData = " + deckData);
-
-        handCards.InitCards(deckData);
+       
+        handCards.InitCards(handCardsData);
     }
+    
 
+    /*
     private void RenderCards() {
 
         // Render Cards
 
-        int len = deckData.Count;
+        int len = handCardsData.Count;
 
         GameObject instantiatedCard;
         Card card;
@@ -71,19 +101,12 @@ public class CardOrganizer : MonoBehaviour {
             instantiatedCard = Instantiate(cardPrefabRef, new Vector3(xPos, yPos), Quaternion.identity);
             instantiatedCard.transform.SetParent(cardsHolder.transform);
 
-            // Add a BoxCollider component to enable mouse interaction
-            /*
-            BoxCollider boxCollider = instantiatedCard.AddComponent<BoxCollider>();
-            boxCollider.size = Vector3.one; // Set the collider size to match the object's size
-            boxCollider.isTrigger = true;
-            */
-
             instantiatedCard.transform.localScale = new Vector3(0.5f, 0.5f, 1);
 
 
             card = instantiatedCard.GetComponent<Card>();
 
-            cardData = deckData[i];
+            cardData = handCardsData[i];
 
             card.SetValue(cardData.Rank);
             card.SetSuite(cardData.Suit);
@@ -91,8 +114,22 @@ public class CardOrganizer : MonoBehaviour {
             xPos += 62;
 
         }
+    }
+    */
 
+    public void OnSubmit() {
+        Debug.Log("OnSubmit");
+
+        // Convert the View Data in to CardData list after user's interaction with the cards to organize in to groups
+        List<CardData> organizedCards = GetOrganizedCards();
+
+        OnSubmitResult(organizedCards);
+
+        this.gameObject.SetActive(false);
     }
 
+    private List<CardData> GetOrganizedCards(){
+        return handCards.GetOrganizedCards();
+    }
 
 }

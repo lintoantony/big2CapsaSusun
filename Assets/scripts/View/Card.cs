@@ -16,6 +16,12 @@ public class Card : MonoBehaviour {
     private Suit suit;
 
     [SerializeField]
+    private Suit smallSuit;
+
+    [SerializeField]
+    private GameObject cardBack;
+
+    [SerializeField]
     public TMP_Text txt;
 
     private void Start() {
@@ -24,6 +30,12 @@ public class Card : MonoBehaviour {
     public void SetSuite(CardSuit type) {
         this.cardSuit = type;
         suit.SetType(type);
+
+        smallSuit.SetType(type);
+    }
+
+    public void OpenCard(bool isOpen){
+        cardBack.SetActive(!isOpen);
     }
 
     public void SetValue(CardRank val){

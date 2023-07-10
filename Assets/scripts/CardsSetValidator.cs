@@ -6,7 +6,9 @@ public static class CardsSetValidator {
 
     // Three­-of­--a­kind : Three equally ranked cards, three twos are highest, then aces,kings, etc.down to three threes, which is the lowest triple.
     // 1 and set of 2 are not considered in this type of game where only 3 rows are validated only at the end. 
-    private static bool ValidateBigTwoSet(List<Card> cardSet) {
+    private static bool ValidateBigTwoSet(List<Card> cardList) {
+
+        List<Card> cardSet = new List<Card>(cardList);
 
         Debug.Log("cardSet.Count = " + cardSet.Count);
 
@@ -89,7 +91,9 @@ public static class CardsSetValidator {
     card in the 2­3­4­5­6 straight. The largest straight is J­Q­K­A­2, while the smallest
     straight is 3­4­5­6­7.
     */
-    private static bool ValidateStraight(List<Card> cardSet) {
+    private static bool ValidateStraight(List<Card> cardList) {
+
+        List<Card> cardSet = new List<Card>(cardList);
 
         // Check for empty set
         if (cardSet.Count == 0) {
@@ -113,7 +117,9 @@ public static class CardsSetValidator {
     }
 
     // Flush: Any 5 cards of the same suit (but not in a sequence). Rank is determined by highest suit and then by highest rank.
-    private static bool ValidateFlush(List<Card> cardSet) {
+    private static bool ValidateFlush(List<Card> cardList) {
+
+        List<Card> cardSet = new List<Card>(cardList);
 
         // Check for empty set
         if (cardSet.Count == 0 || cardSet.Count < 5) {
@@ -141,7 +147,10 @@ public static class CardsSetValidator {
     Full House: a composite of a three­of­a­kind combination and a pair. Rank is
     determined by the value of the triple, regardless of the value of the pair.
     */
-    private static bool ValidateFullHouse(List<Card> cardSet) {
+    private static bool ValidateFullHouse(List<Card> cardList) {
+
+        List<Card> cardSet = new List<Card>(cardList);
+
         // Check for empty set
         if (cardSet.Count == 0) {
             Debug.Log("Card set is empty.");
@@ -182,7 +191,10 @@ public static class CardsSetValidator {
     is determined by the value of the 4 card set, regardless of the value of the 5th
     card.
     */
-    private static bool ValidateFourOfAKind(List<Card> cardSet) {
+    private static bool ValidateFourOfAKind(List<Card> cardList) {
+
+        List<Card> cardSet = new List<Card>(cardList);
+
         // Check for empty set
         if (cardSet.Count == 0){
             Debug.Log("Card set is empty.");
@@ -224,7 +236,9 @@ public static class CardsSetValidator {
     straights, suit being a tie­breaker. 
     */
 
-    private static bool ValidateStraightFlush(List<Card> cardSet) {
+    private static bool ValidateStraightFlush(List<Card> cardList) {
+
+        List<Card> cardSet = new List<Card>(cardList);
 
         // Check for empty set
         if (cardSet.Count == 0) {
@@ -270,6 +284,9 @@ public static class CardsSetValidator {
     private static ResultData resultData;
     public static ResultData ValidateRow(List<Card> cardSet) {
         resultData = new ResultData();
+
+        resultData.setType = SetType.NONE;
+        resultData.rowRank = 0;
 
         bool isStraightFlush = ValidateStraightFlush(cardSet);
 
@@ -358,13 +375,13 @@ public static class CardsSetValidator {
 }
 
 public enum SetType {
+    NONE,
     THREE_OF_A_KIND,
     STRAIGHT,
     FLUSH,
     FULL_HOUSE,
     FOUR_OF_A_KIND,
-    STRAIGHT_FLUSH,
-    NONE
+    STRAIGHT_FLUSH
 }
 
 public class ResultData {

@@ -43,6 +43,10 @@ public class Suit : MonoBehaviour {
                 break;
         }
 
+        if (imageComp == null) {
+            imageComp = GetComponent<Image>();
+        }
+
         imageComp.sprite = sprite;
     }
 }
