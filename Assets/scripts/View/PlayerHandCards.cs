@@ -27,6 +27,11 @@ public class PlayerHandCards : MonoBehaviour {
     }
 
     public void SetCards(List<CardData> handCardsData) {
+
+        if (handCardsData == null) {
+            return;
+        }
+
         for (int i = 0; i < 13; i++){
             handCards[i].SetSuite(handCardsData[i].Suit);
             handCards[i].SetValue(handCardsData[i].Rank);

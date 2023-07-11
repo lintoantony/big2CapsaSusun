@@ -148,6 +148,8 @@ public class HandCards : MonoBehaviour {
 
             card.OpenCard(true);
         }
+
+        Invoke("UpdateCardRowsAfterDelay", 0.1f);
     }
 
     public void UpdateRaycastTarget(bool enabled) {
@@ -165,6 +167,11 @@ public class HandCards : MonoBehaviour {
     }
 
     public List<CardData> GetOrganizedCards() {
+
+        if (cardsRow1View == null && cardsRow2View == null && cardsRow3View == null) {
+            return null;
+        }
+
         List<CardData> organizedCards = new List<CardData>(13);
 
         CardData cardData;

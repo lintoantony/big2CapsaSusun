@@ -125,6 +125,10 @@ public class GameController : MonoBehaviour {
     private void OnSubmitResultReceive(DataFromOrganizer dataFromOrganizer) {
         this.dataFromOrganizer = dataFromOrganizer;
 
+        if (dataFromOrganizer.organizedCards == null) {
+            return;
+        }
+
         // Pass the data to render player hand-cards
         playersContainer.SetPlayerHandCards(0, dataFromOrganizer.organizedCards);
     }
