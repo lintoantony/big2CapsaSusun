@@ -12,13 +12,16 @@ public class PlayersContainer : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start(){
-        InitPlayerHandCards();
+        
     }
 
-    private void InitPlayerHandCards() {
+    public void InitPlayerHandCards() {
 
         for (int i = 0; i < 4; i++) {
             playerViews[i].OpendHandCards(false);
+            playerViews[i].SetHandRanks(false, null);
+
+            playerViews[i].StopEmojiAnim();
         }
     }
 
@@ -36,4 +39,13 @@ public class PlayersContainer : MonoBehaviour {
         playerViews[playerId].SetHandCards(handCardsData);
     }
 
+    public void SetHandRanks(bool isVisible, int playerId, List<ResultData> resultDataList) {
+
+        playerViews[playerId].SetHandRanks(isVisible, resultDataList);
+    }
+
+    public void PlayEmojiAnim(int playerId, AnimType animType) {
+
+        playerViews[playerId].PlayEmojiAnim(animType);
+    }
 }

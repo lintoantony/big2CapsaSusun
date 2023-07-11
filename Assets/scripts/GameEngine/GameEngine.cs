@@ -28,11 +28,123 @@ public class GameEngine : MonoBehaviour {
         PlayersJoining();
 
 
-        HandCardsData handCardsData = handCardsDataList[0];
+        // Setting the cards for the Main-Player to display 
+        OnGameEngineMessage(MessageType.DEAL_HAND_CARDS, 0, handCardsDataList[0]);
 
-        //string msgDataStr = JsonUtility.ToJson(cards);
+        // TEST
+        /*
+        OnGameEngineMessage(MessageType.DISPLAY_OPPONENT_CARDS, 1, handCardsDataList[1]);
+        OnGameEngineMessage(MessageType.DISPLAY_OPPONENT_CARDS, 2, handCardsDataList[2]);
+        OnGameEngineMessage(MessageType.DISPLAY_OPPONENT_CARDS, 3, handCardsDataList[3]);
+        */
 
-        OnGameEngineMessage(MessageType.DEAL_HAND_CARDS, 0, handCardsData);
+        // Game Timer Starts and end at the mentioned time
+        OnGameEngineMessage(MessageType.GAME_TIMER, -1, null);
+
+
+        // During Game, Other players ( Bots in this case ) will be ready to submit by the timer ends
+
+
+
+        // Message to Display the cards ( The sequence of displaying row-by-row ) and Result announcement sequence.
+
+
+
+        // Clear the Table and ready for the next Deal
+    }
+
+    private void DisplayOpponentCardsAtTheEnd(){
+        OnGameEngineMessage(MessageType.DISPLAY_OPPONENT_CARDS, 1, handCardsDataList[1]);
+        OnGameEngineMessage(MessageType.DISPLAY_OPPONENT_CARDS, 2, handCardsDataList[2]);
+        OnGameEngineMessage(MessageType.DISPLAY_OPPONENT_CARDS, 3, handCardsDataList[3]);
+    }
+
+    private void DisplayHandCardRanks() {
+
+        // TODO: To pass appropriate data ( ie. Rank info of 3 hands each of all 4 players)
+
+        OnGameEngineMessage(MessageType.GAME_RESULT, 0, null);
+        OnGameEngineMessage(MessageType.GAME_RESULT, 1, null);
+        OnGameEngineMessage(MessageType.GAME_RESULT, 2, null);
+        OnGameEngineMessage(MessageType.GAME_RESULT, 3, null);
+    }
+
+    private void OnEnable() {
+        CountdownTimer.OnCountDownTimerMessage += OnCountDownTimerMessage;
+    }
+
+    private void OnDisable() {
+        CountdownTimer.OnCountDownTimerMessage -= OnCountDownTimerMessage;
+    }
+
+    private void OnCountDownTimerMessage(MsgType msgType) {
+        switch (msgType) {
+            case MsgType.ON_TIMER_START:
+
+
+                break;
+            case MsgType.ON_TIMER_END:
+
+                
+                PlayResultDisplaySequence();
+
+
+                break;
+            case MsgType.ON_ABOUT_TO_COMPLETE:
+
+
+                break;
+        }
+    }
+
+    private float totalTime = 10f;
+    private float currentTime;
+
+    private void PlayResultDisplaySequence() {
+        currentTime = totalTime;
+
+        StartCoroutine(SequenceCoroutine());
+
+    }
+
+    private IEnumerator SequenceCoroutine() {
+
+        while (currentTime > 0f) {
+
+            yield return new WaitForSeconds(1f);
+
+            currentTime--;
+
+            switch (currentTime) {
+                case 8:
+
+                    // Show Everyone's open cards with latest reorganized data to evaluate the results
+                    DisplayOpponentCardsAtTheEnd();
+
+                    break;
+
+                case 6:
+
+                    DisplayHandCardRanks();
+
+                    break;
+
+                case 4:
+
+
+                    break;
+                case 2:
+
+
+                    break;
+                case 0:
+
+
+                    break;
+            }
+        }
+
+        Debug.Log("SequenceCoroutine Complete!");
     }
 
     private void PlayersJoining() {
@@ -66,12 +178,9 @@ public class GameEngine : MonoBehaviour {
 
         handCardsDataList = new List<HandCardsData>();
 
-
         int len = deckData.Count;
 
-        List<CardData> testList = new List<CardData>();
-
-        int k;
+        int k = 0;
 
         // For four players
         for (int i=0; i<4; i++){
@@ -79,11 +188,9 @@ public class GameEngine : MonoBehaviour {
             handCardsDataObj = new HandCardsData();
             handCardsDataObj.playerId = i;
 
-            k = 0;
-
             handCardsDataObj.cards = new List<CardData>();
 
-            for (int j=0; j<len; j++){
+            for (int j=k; j<len; j++){
 
                 handCardsDataObj.cards.Add(deckData[j]);
 
@@ -104,6 +211,7 @@ public enum MessageType {
     PLAYERS_JOIN, // n players (4 Players ) join the table
     DEAL_HAND_CARDS, // HandCards detail to each player
     GAME_TIMER, // Game Start and End timer
+    DISPLAY_OPPONENT_CARDS, // To show opponent hand-cards
     GAME_RESULT, // Winner Looser data ( Card Data etc. of all players so that we can display all those in the screen)
     CLEAR_TABLE,
     NEW_GAME

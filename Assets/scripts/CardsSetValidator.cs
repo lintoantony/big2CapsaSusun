@@ -285,7 +285,7 @@ public static class CardsSetValidator {
     public static ResultData ValidateRow(List<Card> cardSet) {
         resultData = new ResultData();
 
-        resultData.setType = SetType.NONE;
+        resultData.setType = SetType.HIGH_CARD;
         resultData.rowRank = 0;
 
         bool isStraightFlush = ValidateStraightFlush(cardSet);
@@ -354,7 +354,7 @@ public static class CardsSetValidator {
 
                             } else {
 
-                                resultData.setType = SetType.NONE;
+                                resultData.setType = SetType.HIGH_CARD;
                                 resultData.rowRank = 0;
 
                             }
@@ -375,7 +375,9 @@ public static class CardsSetValidator {
 }
 
 public enum SetType {
-    NONE,
+    HIGH_CARD,
+    ONE_PAIR,
+    TWO_PAIR,
     THREE_OF_A_KIND,
     STRAIGHT,
     FLUSH,

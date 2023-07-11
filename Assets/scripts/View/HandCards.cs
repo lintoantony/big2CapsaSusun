@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HandCards : MonoBehaviour {
 
-    public delegate void OnArrangeCardsDelegate(ResultData row1Result, ResultData row2Result, ResultData row3Result);
+    public delegate void OnArrangeCardsDelegate(List<ResultData> rankResultsData);
     public static event OnArrangeCardsDelegate OnCardArrange;
 
     // Bottom Row of 5 cards
@@ -55,7 +55,7 @@ public class HandCards : MonoBehaviour {
         swappingCard.row = cardPickSlot.row;
         swappingCard.column = cardPickSlot.column;
 
-        Invoke("UpdateCardRowsAfterDelay", 0.5f);
+        Invoke("UpdateCardRowsAfterDelay", 0.1f);
     }
 
     private void UpdateCardRowsAfterDelay() {
@@ -102,7 +102,12 @@ public class HandCards : MonoBehaviour {
         ValidateRows(row1, row2, row3);
     }
 
+
+    public List<ResultData> rankResultsData;
+
     private void ValidateRows(List<Card> row1, List<Card> row2, List<Card> row3) {
+
+        rankResultsData = new List<ResultData>();
 
         // Bottom row result
         ResultData resultData1 = CardsSetValidator.ValidateRow(row1);
@@ -116,7 +121,11 @@ public class HandCards : MonoBehaviour {
         ResultData resultData3 = CardsSetValidator.ValidateRow(row3);
         Debug.Log("ValidateRows : CardsSetValidator : ValidateRow : TOP Row = " + resultData3.setType);
 
-        OnCardArrange(resultData1, resultData2, resultData3);
+        rankResultsData.Add(resultData1);
+        rankResultsData.Add(resultData2);
+        rankResultsData.Add(resultData3);
+
+        OnCardArrange(rankResultsData);
     }
 
     public void InitCards(List<CardData> handCardsData) {

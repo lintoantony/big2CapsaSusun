@@ -18,10 +18,12 @@ public class PlayerView : MonoBehaviour {
     [SerializeField]
     private PlayersContainer playersContainer;
 
+    [SerializeField]
+    private EmojiController emojiController;
+
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start() {
+        emojiController.gameObject.SetActive(false);
     }
 
     public void OpendHandCards(bool isOpen){
@@ -50,4 +52,20 @@ public class PlayerView : MonoBehaviour {
         playerHandCards.SetCards(handCardsData);
     }
 
+    public void SetHandRanks(bool isVisible, List<ResultData> resultDataList) {
+
+        playerHandCards.SetHandRanks(isVisible, resultDataList);
+    }
+
+    public void PlayEmojiAnim(AnimType animType) {
+
+        emojiController.gameObject.SetActive(true);
+
+        emojiController.PlayAnim(animType);
+    }
+
+    public void StopEmojiAnim() {
+
+        emojiController.gameObject.SetActive(false);
+    }
 }

@@ -5,7 +5,7 @@ using TMPro;
 
 public class CardOrganizer : MonoBehaviour {
 
-    public delegate void OnSubmitDelegate(List<CardData> organizedCards);
+    public delegate void OnSubmitDelegate(DataFromOrganizer dataFromOrganizer);
     public static event OnSubmitDelegate OnSubmitResult;
 
     [SerializeField]
@@ -37,18 +37,40 @@ public class CardOrganizer : MonoBehaviour {
 
     private void OnEnable() {
         HandCards.OnCardArrange += OnCardArrange;
+        CountdownTimer.OnCountDownTimerMessage += OnCountDownTimerMessage;
     }
 
     private void OnDisable() {
         HandCards.OnCardArrange -= OnCardArrange;
+        CountdownTimer.OnCountDownTimerMessage -= OnCountDownTimerMessage;
     }
 
-    private void OnCardArrange(ResultData row1Result, ResultData row2Result, ResultData row3Result) {
+    private void OnCountDownTimerMessage(MsgType msgType) {
+        switch (msgType) {
+            case MsgType.ON_TIMER_START:
+
+
+                break;
+            case MsgType.ON_TIMER_END:
+
+                // Submit and close the window.
+
+                SubmitAndClose();
+
+                break;
+            case MsgType.ON_ABOUT_TO_COMPLETE:
+
+
+                break;
+        }
+    }
+
+    private void OnCardArrange(List<ResultData> rankResultsData) {
         Debug.Log("CardOrganizer : OnCardArrange");
 
-        firstRowTxt.text = row1Result.setType.ToString();
-        secondRowTxt.text = row2Result.setType.ToString();
-        thridRowTxt.text = row3Result.setType.ToString();
+        firstRowTxt.text = rankResultsData[0].setType.ToString();
+        secondRowTxt.text = rankResultsData[1].setType.ToString();
+        thridRowTxt.text = rankResultsData[2].setType.ToString();
     }
 
     public void InitDataAndRender(GameController gameControllerRef, List<CardData> cardsData) {
@@ -120,16 +142,29 @@ public class CardOrganizer : MonoBehaviour {
     public void OnSubmit() {
         Debug.Log("OnSubmit");
 
-        // Convert the View Data in to CardData list after user's interaction with the cards to organize in to groups
-        List<CardData> organizedCards = GetOrganizedCards();
+        SubmitAndClose();
+    }
 
-        OnSubmitResult(organizedCards);
+    private void SubmitAndClose() {
+        // Convert the View Data in to CardData list after user's interaction with the cards to organize in to groups
+      
+        OnSubmitResult(GetOrganizedCards());
 
         this.gameObject.SetActive(false);
     }
 
-    private List<CardData> GetOrganizedCards(){
-        return handCards.GetOrganizedCards();
+    private DataFromOrganizer GetOrganizedCards(){
+
+        DataFromOrganizer dataFromOrganizer = new DataFromOrganizer();
+        dataFromOrganizer.organizedCards = handCards.GetOrganizedCards();
+        dataFromOrganizer.rankResultsData = handCards.rankResultsData;
+
+        return dataFromOrganizer;
     }
 
+}
+
+public class DataFromOrganizer {
+    public List<CardData> organizedCards;
+    public List<ResultData> rankResultsData;
 }
